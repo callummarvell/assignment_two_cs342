@@ -33,8 +33,19 @@ pbcols = OrderedDict([(0,'blueviolet'), (1,'green'), (2,'red'),\
 
 pbnames = list(pbmap.values())
 
-datadir = '../input/plasticc-astronomy-starter-kit-media'
+#datadir = '../input/plasticc-astronomy-starter-kit-media'
 metafilename = '../../../../../../courses/cs342/Assignment2/training_set_metadata.csv'
-metadata = pd.read_csv(metafilename)
-nobjects = len(metadata)
-print(metadata)
+trainmeta = pd.read_csv(metafilename)
+
+trainfilename = '../../../../../../courses/cs342/Assignment2/training_set.csv'
+traindata = pd.read_csv(metafilename)
+
+testfilename = '../../../../../../courses/cs342/Assignment2/test_set.csv'
+testdata = pd.read_csv(metafilename)
+
+metafilename = '../../../../../../courses/cs342/Assignment2/test_set_metadata.csv'
+testmeta = pd.read_csv(metafilename)
+
+nobjects = len(trainmeta)
+#print(metadata)
+
