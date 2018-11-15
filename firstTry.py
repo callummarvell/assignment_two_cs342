@@ -38,14 +38,20 @@ metafilename = '../../../../../../courses/cs342/Assignment2/training_set_metadat
 trainmeta = pd.read_csv(metafilename)
 
 trainfilename = '../../../../../../courses/cs342/Assignment2/training_set.csv'
-traindata = pd.read_csv(metafilename)
+traindata = pd.read_csv(trainfilename)
 
 testfilename = '../../../../../../courses/cs342/Assignment2/test_set.csv'
-testdata = pd.read_csv(metafilename)
+testdata = pd.read_csv(testfilename)
 
 metafilename = '../../../../../../courses/cs342/Assignment2/test_set_metadata.csv'
 testmeta = pd.read_csv(metafilename)
 
 nobjects = len(trainmeta)
 #print(metadata)
+
+ts_lens = traindata.groupby(['object_id', 'passband']).size()
+f, ax = plt.subplots(figsize=(12, 6))
+plt.hist(ts_lens, ax=ax)
+ax.set_title('distribution of time series lengths')
+plt.show()
 
