@@ -1,0 +1,58 @@
+\documentclass[11pt]{article}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+	language=Python,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+
+%opening
+\title{CS342 Assignment 2}
+\author{Callum Marvell 1606521}
+
+\begin{document}
+
+\maketitle
+
+\section{Task 1}
+Thanks to the information presented here: (https://www.kaggle.com/mithrillion/strategies-for-flux-time-series-preprocessing), histograms detailing the distribution of time-series lengths and the time at which each image was taken by the LSST (via use of mjd) were plotted to get a basic idea of the qualities inherent to the time-series data. This mainly revealed two things:
+\begin{itemize}
+	\item That the length of the time-series was highly variable (so assuming that they are all the same length is not sensible) and that they will require considerable work to be converted so that all are the same length.
+	\item That the images taken by the LSST were not taken at a constant rate throughout - many were taken during a few "spikes" and several "troughs" exist where very few were taken. This must be taken into account before making any assumptions abou the data gathering methods and consistency.
+\end{itemize}
+Following on from this, several other graphs were created to investigate the distributions of various recorded statistics. These include histograms of the distributions of \lstinline!hostgal_specz! and \lstinline!hostgal_photoz! and a scatter graph of \lstinline!ra! against \lstinline!decl!.
+	
+\section{Task 2}
+
+\section{Task 3}
+
+\section{Task 4}
+
+\section{Task 5}
+
+\section{Task 6}
+
+\section{Task 7}
+
+\end{document}
