@@ -82,7 +82,7 @@ traindata = pd.read_csv(trainfilename)
 
 pre = get_inputs(traindata, trainmeta)
 
-X = np.array.iloc(pre.drop(['distmod', 'target'], axis=1)[:,:])
+X = np.array(pre.drop(['distmod', 'target'], axis=1).iloc[:,:])
 y = np.array(pre['target']).ravel()
 
 
