@@ -85,7 +85,9 @@ pre = get_inputs(traindata, trainmeta)
 X = np.array(pre.drop(['distmod', 'target'], axis=1).iloc[:,:])
 y = np.array(pre['target']).ravel()
 
-
+print(X)
+print("+++++++++++")
+print(y)
 clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
 parameters = {'criterion':('gini','entropy'), 'max_features':('auto','log2',None)}
 gcv = GridSearchCV(estimator=clf, param_grid=parameters, cv=10)
