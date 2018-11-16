@@ -25,6 +25,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
+pd.set_option('display.max_columns', 500)
+
 def get_inputs(data, metadata):
     data['flux_ratio_sq'] = np.power(data['flux'] / data['flux_err'], 2.0)
     data['flux_by_flux_ratio_sq'] = data['flux'] * data['flux_ratio_sq']
@@ -80,14 +82,19 @@ traindata = pd.read_csv(trainfilename)
 #nobjects = len(trainmeta)
 #print(metadata)
 
+
+
 pre = get_inputs(traindata, trainmeta)
 
-X = np.array(pre.drop(['distmod', 'target'], axis=1).iloc[:,:])
+X = np.array(pre.drop(['distmod', 'target', 'flux_skew', 'flux_err_skew'], axis=1).iloc[:,:])
 y = np.array(pre['target']).ravel()
 
-print(X)
+print(X[5:15])
+print(pre.iloc[5:30,:])
 print("+++++++++++")
 print(y)
+
+print(pre.isnull().any())
 clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
 parameters = {'criterion':('gini','entropy'), 'max_features':('auto','log2',None)}
 gcv = GridSearchCV(estimator=clf, param_grid=parameters, cv=10)
@@ -134,5 +141,14 @@ ax2.set_ylabel('decl')
 
 plt.show()
 """
+
+#RandomForestClassifier(bootstrap=True, class_weight=None, criterion='entropy',
+#            max_depth=None, max_features='log2', max_leaf_nodes=None,
+#            min_impurity_split=1e-07, min_samples_leaf=1,
+#            min_samples_split=2, min_weight_fraction_leaf=0.0,
+#            n_estimators=100, n_jobs=-1, oob_score=False,
+#            random_state=None, verbose=0, warm_start=False)
+#0.632390417941
+#{'max_features': 'log2', 'criterion': 'entropy'}
 
 
