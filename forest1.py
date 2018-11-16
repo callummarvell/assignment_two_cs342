@@ -19,7 +19,7 @@ import multiprocessing
 #import cesium.featurize as featurize
 #from tqdm import tnrange, tqdm_notebook
 import sklearn 
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
@@ -53,6 +53,8 @@ def get_inputs(data, metadata):
     aggdata['flux_dif3'] = (aggdata['flux_max'] - aggdata['flux_min']) / aggdata['flux_w_mean']
     return aggdata
 
+classes = [6, 15, 16, 42, 52, 53, 62, 64, 65, 67, 88, 90, 92, 95, 99]
+
 pbmap = OrderedDict([(0,'u'), (1,'g'), (2,'r'), (3,'i'), (4, 'z'), (5, 'Y')])
 
 # it also helps to have passbands associated with a color
@@ -77,6 +79,23 @@ traindata = pd.read_csv(trainfilename)
 
 #nobjects = len(trainmeta)
 #print(metadata)
+
+pre = get_inputs(traindata, trainmeta)
+
+X = np.array.iloc(pre.drop(['distmod', 'target'], axis=1)[:,:])
+y = np.array(pre['target']).ravel()
+
+
+clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
+parameters = {'criterion':('gini','entropy'), 'max_features':('auto','log2',None)}
+gcv = GridSearchCV(estimator=clf, param_grid=parameters, cv=10)
+
+gcv.fit(X,y)
+
+best = gcv.best_estimator_
+print(best)
+print(gcv.best_score_)
+print(gcv.best_params_)
 
 """
 ts_lens = traindata.groupby(['object_id', 'passband']).size()
@@ -114,4 +133,4 @@ ax2.set_ylabel('decl')
 plt.show()
 """
 
-print(get_inputs(traindata, trainmeta))
+
