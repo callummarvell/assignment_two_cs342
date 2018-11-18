@@ -22,7 +22,7 @@ import sklearn
 from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, log_loss
 import seaborn as sns
 
 pd.set_option('display.max_columns', 500)
@@ -57,6 +57,13 @@ def get_inputs(data, metadata):
 
 classes = [6, 15, 16, 42, 52, 53, 62, 64, 65, 67, 88, 90, 92, 95, 99]
 
+class_weights = {
+    c: 1 for c in classes
+}
+
+for c in [64, 15]:
+    class_weights[c] = 2
+
 pbmap = OrderedDict([(0,'u'), (1,'g'), (2,'r'), (3,'i'), (4, 'z'), (5, 'Y')])
 
 # it also helps to have passbands associated with a color
@@ -73,11 +80,11 @@ trainfilename = '../../../../../../courses/cs342/Assignment2/training_set.csv'
 traindata = pd.read_csv(trainfilename)
 #print (traindata)
 
-#testfilename = '../../../../../../courses/cs342/Assignment2/test_set.csv'
-#testdata = pd.read_csv(testfilename)
+testfilename = '../../../../../../courses/cs342/Assignment2/test_set.csv'
+testdata = pd.read_csv(testfilename)
 
-#metafilename = '../../../../../../courses/cs342/Assignment2/test_set_metadata.csv'
-#testmeta = pd.read_csv(metafilename)
+metafilename = '../../../../../../courses/cs342/Assignment2/test_set_metadata.csv'
+testmeta = pd.read_csv(metafilename)
 
 #nobjects = len(trainmeta)
 #print(metadata)
@@ -86,7 +93,9 @@ traindata = pd.read_csv(trainfilename)
 
 pre = get_inputs(traindata, trainmeta)
 
-X = np.array(pre.drop(['distmod', 'target', 'flux_skew', 'flux_err_skew'], axis=1).iloc[:,:])
+pre = pre.dropna()
+
+X = np.array(pre.iloc[:,:])
 y = np.array(pre['target']).ravel()
 
 print(X[5:15])
@@ -95,16 +104,36 @@ print("+++++++++++")
 print(y)
 
 print(pre.isnull().any())
-clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
-parameters = {'criterion':('gini','entropy'), 'max_features':('auto','log2',None)}
-gcv = GridSearchCV(estimator=clf, param_grid=parameters, cv=10)
+clf = RandomForestClassifier(bootstrap=True, class_weight=class_weights, criterion='entropy', 
+                             max_depth=None, max_features='log2', max_leaf_nodes=None,
+                             min_impurity_split=1e-07, min_samples_leaf=1,
+                             min_samples_split=2, min_weight_fraction_leaf=0.0,
+                             n_estimators=100, n_jobs=-1, oob_score=False,
+                             random_state=None, verbose=0, warm_start=False)
+#parameters = {'criterion':('gini','entropy'), 'max_features':('auto','log2',None)}
+#gcv = GridSearchCV(estimator=clf, param_grid=parameters, cv=10)
 
-gcv.fit(X,y)
+#gcv.fit(X,y)
 
-best = gcv.best_estimator_
-print(best)
-print(gcv.best_score_)
-print(gcv.best_params_)
+#best = gcv.best_estimator_
+#print(best)
+#print(gcv.best_score_)
+#print(gcv.best_params_)
+
+clf.fit(X, y)
+
+pre_test = get_inputs(testdata, testmeta)
+
+pre_test = pre_test.dropna()
+
+Xt = np.array(pre_test.iloc[:,:])
+yt = np.array(pre_test['target']).ravel()
+
+print(clf.score(Xt,yt))
+
+proba = clf.predict_proba(Xt)
+
+print(log_loss(yt, proba))
 
 """
 ts_lens = traindata.groupby(['object_id', 'passband']).size()
