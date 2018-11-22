@@ -5,6 +5,7 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{url}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -36,7 +37,7 @@
 \maketitle
 
 \section{Task 1}
-Thanks to the information presented here: (https://www.kaggle.com/mithrillion/strategies-for-flux-time-series-preprocessing), histograms detailing the distribution of time-series lengths and the time at which each image was taken by the LSST (via use of mjd) were plotted to get a basic idea of the qualities inherent to the time-series data. This mainly revealed two things:
+Thanks to the information presented here \cite{flux_graph}, histograms detailing the distribution of time-series lengths and the time at which each image was taken by the LSST (via use of mjd) were plotted to get a basic idea of the qualities inherent to the time-series data. This mainly revealed two things:
 \begin{itemize}
 	\item That the length of the time-series was highly variable (so assuming that they are all the same length is not sensible) and that they will require considerable work to be converted so that all are the same length.
 	\item That the images taken by the LSST were not taken at a constant rate throughout - many were taken during a few "spikes" and several "troughs" exist where very few were taken. This must be taken into account before making any assumptions abou the data gathering methods and consistency.
@@ -48,6 +49,7 @@ Following on from this, several other graphs were created to investigate the dis
 \section{Task 3}
 
 \section{Task 4}
+The first attempt made at building a RandomForestClassifier to correctly classify the objects was not very successful - only scoring around 0.6 in R\textsuperscript{2} score. This was likely due to the significant reduction in usable data, as a direct result of my quick and dirty workaround for NaN results in the dataframe (removing any columns with any NaN results inside). The next attempt switched this concept around - instead only removing any rows which contained NaN results (from both the training and test set). Additionally, an attempt to use the \lstinline!class_weights! determined here \cite{class_weights} via frequency analysis, in the hopes of improving the score of the classifier. The move to using \lstinline!log_loss! as in the leaderboards was also made.
 
 \section{Task 5}
 
@@ -55,4 +57,7 @@ Following on from this, several other graphs were created to investigate the dis
 
 \section{Task 7}
 
+
+\bibliographystyle{plain}
+\bibliography{document}
 \end{document}

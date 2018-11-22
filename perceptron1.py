@@ -23,6 +23,7 @@ from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV, Strati
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, log_loss
+from sklearn.neural_network import MLPClassifier
 import seaborn as sns
 
 pd.set_option('display.max_columns', 500)
@@ -139,15 +140,29 @@ print("+++++++++++")
 print(y)
 
 print(pre.isnull().any())
-clf = RandomForestClassifier(bootstrap=True, class_weight='balanced', criterion='entropy', 
-                             max_depth=None, max_features='log2', max_leaf_nodes=None,
-                             min_impurity_split=1e-07, min_samples_leaf=1,
-                             min_samples_split=2, min_weight_fraction_leaf=0.0,
-                             n_estimators=100, n_jobs=-1, oob_score=False,
-                             random_state=None, verbose=0, warm_start=False)
-clf.classes_=classes
-skf = StratifiedKFold(n_splits=2)
 
+clf = MLPClassifier(activation='tanh', alpha=0.0001, batch_size='auto', beta_1=0.9,
+       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+       hidden_layer_sizes=(100, 100), learning_rate='constant',
+       learning_rate_init=0.001, max_iter=200, momentum=0.9,
+       nesterovs_momentum=True, power_t=0.5, random_state=None,
+       shuffle=True, solver='lbfgs', tol=0.0001, validation_fraction=0.1,
+       verbose=False, warm_start=False)
+
+clf.classes_=classes
+#skf = StratifiedKFold(n_splits=2)
+
+"""
+parameters = {'solver':('lbfgs','sgd','adam'), 'activation':('identity','logistic','tanh','relu'), 'learning_rate':('constant','invscaling','adaptive'), 'hidden_layer_sizes':((100,),(100,100,),(100,100,100,))}
+gcv = GridSearchCV(estimator=clf, param_grid=parameters, cv=10, verbose=100, n_jobs=-1)
+
+gcv.fit(X,y)
+
+best = gcv.best_estimator_
+print(best)
+print(gcv.best_score_)
+print(gcv.best_params_)
+"""
 """
 for train_index, test_index in skf.split(X, y):
 	X_train, X_test = X[train_index], X[test_index]
@@ -190,6 +205,7 @@ except NameError:
 	df['e'] = pd.Series(np.array(pre_test['object_id']).ravel(), index=df.index)
 	df2 = pd.DataFrame(out2)
 """
+
 for chunk in pd.read_csv(testfilename, chunksize=chunksize):
 	testdata = pd.read_csv(testfilename, skiprows=skip, nrows=chunksize, header=0, names=column_data)
 	print(skip)
@@ -232,7 +248,6 @@ df.to_csv("submission.csv", index = False)
 #print(best)
 #print(gcv.best_score_)
 #print(gcv.best_params_)
-
 """
 clf.fit(X, y)
 
@@ -301,4 +316,12 @@ plt.show()
 #0.632390417941
 #{'max_features': 'log2', 'criterion': 'entropy'}
 
+
+#MLPClassifier(activation='tanh', alpha=0.0001, batch_size='auto', beta_1=0.9,
+#       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+#       hidden_layer_sizes=(100, 100), learning_rate='constant',
+#       learning_rate_init=0.001, max_iter=200, momentum=0.9,
+#       nesterovs_momentum=True, power_t=0.5, random_state=None,
+#       shuffle=True, solver='lbfgs', tol=0.0001, validation_fraction=0.1,
+#       verbose=False, warm_start=False)
 

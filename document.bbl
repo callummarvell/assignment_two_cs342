@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+
+\bibitem{class_weights}
+Public class weights.
+\newblock \url{https://www.kaggle.com/c/PLAsTiCC-2018/discussion/67194}.
+\newblock Accessed: 18-11-2018.
+
+\bibitem{flux_graph}
+Strategies for flux time-series preprocessing.
+\newblock
+  \url{https://www.kaggle.com/mithrillion/strategies-for-flux-time-series-preprocessing}.
+\newblock Accessed: 12-11-2018.
+
+\end{thebibliography}
